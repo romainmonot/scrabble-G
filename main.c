@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include<fcntl.h>
 #include "biblio_scrable.h"
 
 #define LONGEUR 50

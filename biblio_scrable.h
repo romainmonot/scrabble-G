@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include<fcntl.h>
 
 #define NB_CARAC 27
 #define NB_COLONE 2
@@ -15,6 +16,7 @@
 #define NB_PIECE_MAIN 7
 #define DIM_GRILLE 15
 #define LONGEUR_PSEUDO 50
+#define nb_mots 22740
 
 char** allocDynamique2D(int longeur,int larg);
 void initialiseTab(int tTab[NB_CARAC][NB_COLONE]);
@@ -30,4 +32,5 @@ void afficheMots(char**tab,int numJoueur);
 void initialiseGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE]);
 int estDansLaGrille(char sens,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int*tCase,char*tMot);
 void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,char tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot);
+int motvalide(char mot[26]);
 #endif //SCRABLE_PROJET_BIBLIO_SCRABLE_H

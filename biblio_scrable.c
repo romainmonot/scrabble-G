@@ -314,3 +314,48 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
     scanf(" %c",&sens);
     tCase[2]=chiffrage(sens);
     }
+
+int motvalide(char mot[26]) {
+
+    int valide=0;
+    int mots =0;
+    int rep =0;
+    int vers = 1;
+
+    char** motsdico;
+    motsdico = calloc(nb_mots,sizeof(char*));
+    for (int k=0; k<= nb_mots; k++){
+        motsdico[k]= calloc(26,sizeof(char));
+    }
+
+
+    char * buffer = malloc(sizeof(char) * 1);
+    int fd = open("D:\\DEVOIRS ECE\\Informatique\\Scrable\\Mots.txt", O_RDONLY); //insérer l'emplacement du fichier
+    if (fd == -1){printf ("error");return 0;}
+
+
+    while (vers !=0 && vers != -1){
+        vers = read (fd, buffer, 1);
+        if (rep >26){ printf ("error");return 0;}
+        if (vers != 0 && vers != -1 && buffer[0]!=' ' && buffer[0]!= '\n'){
+            motsdico[mots][rep]=buffer[0];
+            rep++;
+        }
+        else if (vers !=0 && vers != -1 && buffer[0]=='\n'){
+            motsdico[mots][rep]='\0';
+            rep =0;
+            mots++;
+        }
+    }
+    if (vers == -1) {printf ("error");return 0;}
+    close (fd);
+
+    for (int n=0; n<=nb_mots;n++){
+
+        if ( strcmp (motsdico[n], mot) == 0) {valide = 1;}
+    }
+
+    for (int k=0;k<=nb_mots;k++){
+    }
+    liberationChar(motsdico,nb_mots);
+    return valide;
