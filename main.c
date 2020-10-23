@@ -1,49 +1,70 @@
 #include <stdio.h>
+#include<fcntl.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
-#include "biblio_scrable.h"
+#define nb_mots 22740
 
-#define LONGEUR 50
-
-//Pour les  tests
-void afficheTab2D2(char**tab, int numLongeur, int larg){
-    for (int j = 0; j < larg-1; j++) {
-        printf("%c,",tab[numLongeur][j]);
+void libererTableau2D(char** tableau2D, int nbLignes, int nbColonnes) {
+    int i = 0;
+    if (nbColonnes > 0) {
+        for (i = 0; i < nbLignes; i++) {
+            free(tableau2D[i]);
+        }
     }
-    printf("%c\n",tab[numLongeur][larg-1]);
+    if(nbLignes > 0) {
+        free(tableau2D);
+    }
 }
 
-int main() {
-    //Initialisation
-    srand(time(NULL));
-    int debut = afficheMenu();
-    if(debut==0){
-        return 0;
-    }
-    int tPioche[NB_CARAC][NB_COLONE];
-    initialiseTab(tPioche);
-    int totalPiece=TOTAL_PIECE,nbJoueurs=0,JDebute=0;
-    int*pTotalPiece=&totalPiece;
-    printf("Combien de joueurs y'a t-il ?\n");
-    scanf("%d",&nbJoueurs);//entre 2 et 4
-    printf("\n");
-    JDebute=rand()%(nbJoueurs-1);
-    char tGrille[2][DIM_GRILLE][DIM_GRILLE];
-    initialiseGrille(tGrille);
-    int tCase[3]={0,0,0};
-    char**tJoueurs=allocJoueur(nbJoueurs);
-    char**tChevalet=initialiseChevalets(tPioche,pTotalPiece,JDebute,nbJoueurs);
-    char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
+int motvalide(char mot[26]) {
 
-    // Tests
-    affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,1,tMot);
-    liberationChar(tJoueurs,nbJoueurs);
-    liberationChar(tChevalet,nbJoueurs);
-    free(tMot);
-    return 0;
+    int valide=0;
+    int mots =0;
+    int rep =0;
+    int vers = 1;
+
+    char** motsdico;
+    motsdico = calloc(nb_mots,sizeof(char*));
+    for (int k=0; k<= nb_mots; k++){
+        motsdico[k]= calloc(26,sizeof(char));
+    }
+
+
+    char * buffer = malloc(sizeof(char) * 1);
+    int fd = open("D:\\DEVOIRS ECE\\Informatique\\Scrable\\Mots.txt", O_RDONLY); //insérer l'emplacement du fichier
+    if (fd == -1){printf ("error");return 0;}
+
+
+    while (vers !=0 && vers != -1){
+        vers = read (fd, buffer, 1);
+        if (rep >26){ printf ("error");return 0;}
+        if (vers != 0 && vers != -1 && buffer[0]!=' ' && buffer[0]!= '\n'){
+            motsdico[mots][rep]=buffer[0];
+            rep++;
+        }
+        else if (vers !=0 && vers != -1 && buffer[0]=='\n'){
+            motsdico[mots][rep]='\0';
+            rep =0;
+            mots++;
+        }
+    }
+    if (vers == -1) {printf ("error");return 0;}
+    close (fd);
+
+    for (int n=0; n<=nb_mots;n++){
+
+        if ( strcmp (motsdico[n], mot) == 0) {valide = 1;}
+    }
+
+    for (int k=0;k<=nb_mots;k++){
+    }
+    libererTableau2D(motsdico,nb_mots,26);
+    return valide;
+
 }
-//test initialiseGrille & estDansLaGrille
-//Annoter les fct compliquée
-//printf("%s commence",tJoueurs[JDebute])
-//ajouter le score dans affichageTour
+
+int main(){
+    char motbis[25]="salut";
+    printf("%d",motvalide(motbis));
+
+}
