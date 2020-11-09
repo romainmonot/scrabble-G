@@ -2,18 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include<fcntl.h>
+#include <fcntl.h>
 #include "biblio_scrable.h"
-
-#define LONGEUR 50
-
-//Pour les  tests
-void afficheTab2D2(char**tab, int numLongeur, int larg){
-    for (int j = 0; j < larg-1; j++) {
-        printf("%c,",tab[numLongeur][j]);
-    }
-    printf("%c\n",tab[numLongeur][larg-1]);
-}
 
 int main() {
     //Initialisation
