@@ -6,7 +6,7 @@
 #include "biblio_scrable.h"
 
 int main() {
-    //Initialisation
+    //Initialisation :
     srand(time(NULL));
     printf("1");
     int debut = afficheMenu();
@@ -29,11 +29,13 @@ int main() {
     char**tJoueurs=allocJoueur(nbJoueurs);
     char**tChevalet=initialiseChevalets(tPioche,pTotalPiece,JDebute,nbJoueurs);
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
+    //Partie :
     printf("%s commence",tJoueurs[JDebute])
     while (fin!=1) {
         affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,JDebute,tMot,pTotalPiece);
         JDebute=(JDebute+1)%nbJoueurs;
     }
+    //Libérations :
     liberationChar(tJoueurs,nbJoueurs);
     liberationChar(tChevalet,nbJoueurs);
     free(tMot);
