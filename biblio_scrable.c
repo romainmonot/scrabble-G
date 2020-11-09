@@ -260,7 +260,7 @@ void initialiseGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE]){
     tGrille[0][14][14]='$';
 }
 
-int estDansLaGrille(char sens,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int*tCase,char*tMot){
+int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot){
     int len=strlen(tMot);
     if(sens=='H'){
        if(len-1+tCase[1]<DIM_GRILLE && tCase[0]<DIM_GRILLE){
@@ -275,8 +275,8 @@ int estDansLaGrille(char sens,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int*tCase,
     return 0;
 }
 
-void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,char tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot){
-    int i=0,j=0,k=0,ligne=0;
+void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece){
+    int i=0,j=0,k=0,ligne=0,rep=1;
     char sens='R',colone='R';
     char tMotLoc[DIM_GRILLE];
     tMot=realloc(tMot,sizeof(char)*DIM_GRILLE);
@@ -300,19 +300,44 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
         printf("%c:%d pt(s)  ",tChevalets[numJoueur][k],tPioche[chiffrage(tChevalets[numJoueur][k])][1]);
     }
     printf("\nLégende :\n# : point de départ\n& : lettre double\n%c : lettre triple\n@ : mot double\n$ : mot triple\n\n",'%');
-    printf("Mot à saisir : ");
-    scanf("%s",tMotLoc);
-    strcpy(tMot,tMotLoc);
-    tMot=realloc(tMot,sizeof(char)*strlen(tMot));
-    printf("Entrez ses coodonées :\n Lettre de colone : ");
-    scanf(" %c",&colone);
-    tCase[0]=chiffrage(colone);
-    printf(" Numéro de ligne : ");
-    scanf("%d",&ligne);
-    tCase[1]=ligne-1;
-    printf(" Sens : ");
-    scanf(" %c",&sens);
-    tCase[2]=chiffrage(sens);
+    printf("Voulez vous continuer à jouer ? (1) oui, (0)non\n");
+    do {
+        scanf("%d",&rep);
+    }while (rep!=0 && rep!=1);
+    if (rep==0){
+        //Quitter et savegarder
+    }
+    else {
+        printf("Voulez vous saisir un mot ? (1) oui, (0)non\n");
+        do {
+            scanf("%d",&rep);
+        }while (rep!=0 && rep!=1);
+        if (rep==0) {
+            printf("Voulez vous changer vos lettres ? (1) oui, (0)non\n");
+            do {
+                scanf("%d",&rep);
+            }while (rep!=0 && rep!=1);
+            if (rep == 1) {
+                changerNPiece(tChevalets, tPioche, pTotalPiece, numJoueur);
+            }
+        }
+        else {
+            printf("Mot à saisir : ");
+            scanf("%s", tMotLoc);
+            strcpy(tMot, tMotLoc);
+            tMot = realloc(tMot, sizeof(char) * strlen(tMot));
+            printf("Entrez ses coodonées :\n Lettre de colone : ");
+            scanf(" %c", &colone);
+            tCase[0] = chiffrage(colone);
+            printf(" Numéro de ligne : ");
+            scanf("%d", &ligne);
+            tCase[1] = ligne - 1;
+            printf(" Sens : ");
+            scanf(" %c", &sens);
+            tCase[2] = chiffrage(sens);
+            //Se charger de la validité
+        }
+
     }
 
 int motvalide(char mot[26]) {

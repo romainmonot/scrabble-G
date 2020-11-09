@@ -30,7 +30,7 @@ int afficheMenu();
 char** allocJoueur(int nbJoueurs);
 void afficheMots(char**tab,int numJoueur);
 void initialiseGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE]);
-int estDansLaGrille(char sens,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int*tCase,char*tMot);
-void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,char tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot);
+int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot);
+void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece);
 int motvalide(char mot[26]);
 #endif //SCRABLE_PROJET_BIBLIO_SCRABLE_H

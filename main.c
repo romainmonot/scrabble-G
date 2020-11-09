@@ -18,6 +18,7 @@ void afficheTab2D2(char**tab, int numLongeur, int larg){
 int main() {
     //Initialisation
     srand(time(NULL));
+    printf("1");
     int debut = afficheMenu();
     if(debut==0){
         return 0;
@@ -27,7 +28,9 @@ int main() {
     int totalPiece=TOTAL_PIECE,nbJoueurs=0,JDebute=0;
     int*pTotalPiece=&totalPiece;
     printf("Combien de joueurs y'a t-il ?\n");
-    scanf("%d",&nbJoueurs);//entre 2 et 4
+    do {
+        scanf("%d",&nbJoueurs);
+    }while (nbJoueurs<2 && nbJoueurs>4);
     printf("\n");
     JDebute=rand()%(nbJoueurs-1);
     char tGrille[2][DIM_GRILLE][DIM_GRILLE];
@@ -38,13 +41,12 @@ int main() {
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
 
     // Tests
-    affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,1,tMot);
+    affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,1,tMot,pTotalPiece);
     liberationChar(tJoueurs,nbJoueurs);
     liberationChar(tChevalet,nbJoueurs);
     free(tMot);
     return 0;
 }
-//test initialiseGrille & estDansLaGrille
-//Annoter les fct compliquée
+
 //printf("%s commence",tJoueurs[JDebute])
 //ajouter le score dans affichageTour
