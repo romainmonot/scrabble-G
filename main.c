@@ -32,21 +32,22 @@ int main() {
         scanf("%d",&nbJoueurs);
     }while (nbJoueurs<2 && nbJoueurs>4);
     printf("\n");
-    JDebute=rand()%(nbJoueurs-1);
+    JDebute=rand()%nbJoueurs;
     char tGrille[2][DIM_GRILLE][DIM_GRILLE];
     initialiseGrille(tGrille);
     int tCase[3]={0,0,0};
     char**tJoueurs=allocJoueur(nbJoueurs);
     char**tChevalet=initialiseChevalets(tPioche,pTotalPiece,JDebute,nbJoueurs);
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
-
-    // Tests
-    affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,1,tMot,pTotalPiece);
+    printf("%s commence",tJoueurs[JDebute])
+    while (fin!=1) {
+        affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,JDebute,tMot,pTotalPiece);
+        JDebute=(JDebute+1)%nbJoueurs;
+    }
     liberationChar(tJoueurs,nbJoueurs);
     liberationChar(tChevalet,nbJoueurs);
     free(tMot);
     return 0;
 }
 
-//printf("%s commence",tJoueurs[JDebute])
-//ajouter le score dans affichageTour
+//ajouter le score et estDans la Grille dans affichageTour
