@@ -8,7 +8,6 @@
 int main() {
     //Initialisation :
     srand(time(NULL));
-    printf("1");
     int debut = afficheMenu();
     if(debut==0){
         return 0;
