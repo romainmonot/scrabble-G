@@ -262,10 +262,10 @@ void initialiseGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE]){
 
 int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot){
     int len=strlen(tMot);
-    if(sens=='H'){
-       if(len-1+tCase[1]<DIM_GRILLE && tCase[0]<DIM_GRILLE){
-           return 1;
-       }
+    if(lettrage(tCase[2])=='H'){
+        if(len-1+tCase[1]<DIM_GRILLE && tCase[0]<DIM_GRILLE){
+            return 1;
+        }
     }
     else{
         if(len-1+tCase[0]<DIM_GRILLE && tCase[1]<DIM_GRILLE){
