@@ -30,7 +30,7 @@ int main() {
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
     //Partie :
     printf("%s commence",tJoueurs[JDebute])
-    while (fin!=1) {
+    while (fin!=1) {//fin pas encore codé
         affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,JDebute,tMot,pTotalPiece);
         JDebute=(JDebute+1)%nbJoueurs;
     }
