@@ -146,20 +146,23 @@ void liberationChar(char** tTab, int longeur){
     free(tTab);
 }
 int afficheMenu() {
-    int commencer = 0;
+    int commencer = 3;
     do {
-        printf("Pour commencer une partie taper (1).\nPour quitter taper (2). \n");
+        printf("Pour charger la dernière partie taper (2)\nPour commencer une nouvelle partie taper (1).\nPour quitter taper (0). \n");
         scanf("%d", &commencer);
         if (commencer == 1) {
             printf("Let's GO !\n\n");
             return 1;
-        } else if (commencer == 2) {
+        } else if (commencer == 0) {
             printf("A bientot !\n");
             return 0;
-        } else {
+        } else if (commencer == 2) {
+            printf("C'est reparti !");
+            return 2;
+        }else {
             printf("Recommencer.\n");
         }
-    } while (commencer != 1 && commencer != 2);
+    }while (commencer != 2 && commencer != 1 && commencer != 0);
 }
 
 char** allocJoueur(int nbJoueurs){
