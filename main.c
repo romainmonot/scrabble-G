@@ -30,7 +30,7 @@ int main() {
         tJoueurs=allocJoueur(nbJoueurs);
         tChevalet=initialiseChevalets(tPioche,pTotalPiece,JDebute,nbJoueurs);
     }
-    else if(debut==2){
+    else{
         //Fonction charger la partie
     }
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));

@@ -278,53 +278,52 @@ int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tM
     return 0;
 }
 
-void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece){
-    int i=0,j=0,k=0,ligne=0,rep=1;
-    char sens='R',colone='R';
+void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece) {
+    int i = 0, j = 0, k = 0, ligne = 0, rep = 1;
+    char sens = 'R', colone = 'R';
     char tMotLoc[DIM_GRILLE];
-    tMot=realloc(tMot,sizeof(char)*DIM_GRILLE);
+    tMot = realloc(tMot, sizeof(char) * DIM_GRILLE);
     printf("   A  B  C  D  E  F  G  H  I  J  K  L  M  N  O\n");
-    for(i=0;i<10;i++){
-        printf("%d |",i);
-        for(j=0;j<DIM_GRILLE;j++){
-            printf("%c%c|",tGrille[0][i][j],tGrille[1][i][j]);
+    for (i = 0; i < 10; i++) {
+        printf("%d |", i);
+        for (j = 0; j < DIM_GRILLE; j++) {
+            printf("%c%c|", tGrille[0][i][j], tGrille[1][i][j]);
         }
         printf("\n");
     }
-    for(i=10;i<DIM_GRILLE;i++){
-        printf("%d|",i);
-        for(j=0;j<DIM_GRILLE;j++){
-            printf("%c%c|",tGrille[0][i][j],tGrille[1][i][j]);
+    for (i = 10; i < DIM_GRILLE; i++) {
+        printf("%d|", i);
+        for (j = 0; j < DIM_GRILLE; j++) {
+            printf("%c%c|", tGrille[0][i][j], tGrille[1][i][j]);
         }
         printf("\n");
     }
-    printf("\n%s : Score \n\t",tJoueurs[numJoueur]);
-    for(k=0;k<NB_PIECE_MAIN;k++){
-        printf("%c:%d pt(s)  ",tChevalets[numJoueur][k],tPioche[chiffrage(tChevalets[numJoueur][k])][1]);
+    printf("\n%s : Score \n\t", tJoueurs[numJoueur]);
+    for (k = 0; k < NB_PIECE_MAIN; k++) {
+        printf("%c:%d pt(s)  ", tChevalets[numJoueur][k], tPioche[chiffrage(tChevalets[numJoueur][k])][1]);
     }
-    printf("\nLégende :\n# : point de départ\n& : lettre double\n%c : lettre triple\n@ : mot double\n$ : mot triple\n\n",'%');
+    printf("\nLégende :\n# : point de départ\n& : lettre double\n%c : lettre triple\n@ : mot double\n$ : mot triple\n\n",
+           '%');
     printf("Voulez vous continuer à jouer ? (1) oui, (0)non\n");
     do {
-        scanf("%d",&rep);
-    }while (rep!=0 && rep!=1);
-    if (rep==0){
+        scanf("%d", &rep);
+    } while (rep != 0 && rep != 1);
+    if (rep == 0) {
         //Quitter et savegarder
-    }
-    else {
+    } else {
         printf("Voulez vous saisir un mot ? (1) oui, (0)non\n");
         do {
-            scanf("%d",&rep);
-        }while (rep!=0 && rep!=1);
-        if (rep==0) {
+            scanf("%d", &rep);
+        } while (rep != 0 && rep != 1);
+        if (rep == 0) {
             printf("Voulez vous changer vos lettres ? (1) oui, (0)non\n");
             do {
-                scanf("%d",&rep);
-            }while (rep!=0 && rep!=1);
+                scanf("%d", &rep);
+            } while (rep != 0 && rep != 1);
             if (rep == 1) {
                 changerNPiece(tChevalets, tPioche, pTotalPiece, numJoueur);
             }
-        }
-        else {
+        } else {
             printf("Mot à saisir : ");
             scanf("%s", tMotLoc);
             strcpy(tMot, tMotLoc);
@@ -342,6 +341,21 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
         }
 
     }
+}
+
+void ecrireDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot){
+    int i=0;
+    if(tCase[2]==chiffrage('H')){
+        for(i=0;i>strlen(tMot);i++){
+            tGrille[1][tCase[0]][tCase[1]+i]=tMot[i];
+        }
+    }
+    else {
+        for(i=0;i>strlen(tMot);i++){
+            tGrille[1][tCase[0]+i][tCase[1]]=tMot[i];
+        }
+    }
+}
 
 int motvalide(char mot[26]) {
 
