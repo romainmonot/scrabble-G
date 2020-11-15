@@ -13,7 +13,7 @@ int main() {
         return 0;
     }
     int tPioche[NB_CARAC][NB_COLONE];
-    int totalPiece=TOTAL_PIECE,nbJoueurs=0,JDebute=0;
+    int totalPiece=TOTAL_PIECE,nbJoueurs=0,JDebute=0,fin=0;
     int*pTotalPiece=&totalPiece;
     char tGrille[2][DIM_GRILLE][DIM_GRILLE];
     char**tJoueurs;
@@ -40,7 +40,9 @@ int main() {
     while (fin!=1) {//fin pas encore codé
         affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,JDebute,tMot,pTotalPiece);
         JDebute=(JDebute+1)%nbJoueurs;
+        fin=finDePartie(totalPiece,tChevalets,nbJoueurs);
     }
+    //QUI A  Gagné?
     //Libérations :
     liberationChar(tJoueurs,nbJoueurs);
     liberationChar(tChevalet,nbJoueurs);

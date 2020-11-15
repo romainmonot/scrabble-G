@@ -360,7 +360,7 @@ void ecrireDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],cha
     }
 }
 
-int finDePartie(int totalPiece,char**tChevalets,int nbJouers){
+int finDePartie(int totalPiece,char**tChevalets,int nbJoueurs){
     if(totalPiece==0){
         int gagnant=0,i=0;
         for(i=0;i<nbJouers;i++){
