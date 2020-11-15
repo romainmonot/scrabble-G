@@ -37,7 +37,7 @@ int main() {
     int tCase[3]={0,0,0};
     //Partie :
     printf("%s commence",tJoueurs[JDebute])
-    while (fin!=1) {//fin pas encore codé
+    while(fin!=1){//fin pas encore codé
         affichageTour(tGrille,tJoueurs,tChevalet,tCase,tPioche,JDebute,tMot,pTotalPiece);
         JDebute=(JDebute+1)%nbJoueurs;
         fin=finDePartie(totalPiece,tChevalets,nbJoueurs);
