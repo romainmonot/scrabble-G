@@ -85,6 +85,9 @@ int chiffrage(char lettreNum){
 }
 
 char pioche(int tTab[NB_CARAC][NB_COLONE],int*pTotalPiece){
+    if(*pTotalPiece==0){
+        return '0';
+    }
     int numPiece=0,numLettre=0,totLoc=0;
     numPiece=rand()%*pTotalPiece;//Tire un numéro de pièce (pas de lettre) aléatiore
     do {//Cette boucle détermine la lettre correspondante au numéro de pièce tiré
@@ -355,6 +358,19 @@ void ecrireDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],cha
             tGrille[1][tCase[0]+i][tCase[1]]=tMot[i];
         }
     }
+}
+
+int finDePartie(int totalPiece,char**tChevalets,int nbJouers){
+    if(totalPiece==0){
+        int gagnant=0,i=0;
+        for(i=0;i<nbJouers;i++){
+            if(tChevalets[i]=='0000000'){
+                //Modif des Scores
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 
 int motvalide(char mot[26]) {
