@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include<fcntl.h>
+#include <ctype.h>
+#include <unistd.h>
 
 #define NB_CARAC 27
 #define NB_COLONE 2
@@ -34,5 +36,12 @@ int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tM
 void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece);
 void ecrireDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot);
 int finDePartie(int totalPiece,char**tChevalets,int nbJoueurs);
-int motvalide(char mot[26]);
+void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int JDebute,int points,int tPioche[NB_CARAC][NB_COLONE],int totalPiece,int nbJoueurs);
+char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDebute,int points,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece);
+char**recharge2(char**tChevalets);
+int motexiste(char mot[27]);
+void lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k);
+int motvalide(char mot[15],char listedelettres[7]);
+void minuscule(char mot[15]);
+int testValidite(char*tMot,char*tChevalet);
 #endif //SCRABLE_PROJET_BIBLIO_SCRABLE_H

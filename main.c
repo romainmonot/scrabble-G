@@ -8,7 +8,7 @@
 int main() {
     //Initialisation
     srand(time(NULL));
-    int debut = afficheMenu();
+    int debut=afficheMenu();
     if(debut==0){
         return 0;
     }
@@ -18,23 +18,24 @@ int main() {
     char tGrille[2][DIM_GRILLE][DIM_GRILLE];
     char**tJoueurs;
     char**tChevalet;
+    initialiseGrille(tGrille);
+    initialiseTab(tPioche);
     if(debut==1){
-        initialiseTab(tPioche);
         printf("Combien de joueurs y'a t-il ?\n");
-        do {
+        do{
             scanf("%d",&nbJoueurs);
-        }while (nbJoueurs<2 && nbJoueurs>4);
+        }while(nbJoueurs<2 && nbJoueurs>4);
         printf("\n");
         JDebute=rand()%nbJoueurs;
-        initialiseGrille(tGrille);
         tJoueurs=allocJoueur(nbJoueurs);
         tChevalet=initialiseChevalets(tPioche,pTotalPiece,JDebute,nbJoueurs);
     }
     else{
-        //Fonction charger la partie
+        tJoueurs=recharge(tGrille,tJoueurs,&JDebute,0,tPioche,pTotalPiece);
+        tChevalet=recharge2(tChevalet);
     }
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
-    int tCase[3]={0,0,0};
+    int tCase[3]={7,7,chiffrage('H')};
     //Partie :
     printf("%s commence",tJoueurs[JDebute])
     while(fin!=1){//fin pas encore codé
