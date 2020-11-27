@@ -283,7 +283,7 @@ int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tM
     return 0;
 }
 
-void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece){
+void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece,int*tPoints){
     int i=0,j=0,k=0,ligne=0,rep=1;
     char sens='R',colone='R';
     tMot=realloc(tMot,sizeof(char)*DIM_GRILLE);
@@ -302,7 +302,7 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
         }
         printf("\n");
     }
-    printf("\n%s : Score \n\t",tJoueurs[numJoueur]);
+    printf("\n%s : Score %d\n\t",tJoueurs[numJoueur],tPoints[numJoueur]);
     for(k=0;k<NB_PIECE_MAIN;k++){
         printf("%c:%d pt(s)  ",tChevalets[numJoueur][k],tPioche[chiffrage(tChevalets[numJoueur][k])][1]);
     }
@@ -317,11 +317,13 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
             scanf("%d",&rep);
         }while(rep!=0 && rep!=1);
         if(rep==1){
-            sauvegarde(tChevalets,tGrille,tJoueurs,numJoueur,0,tPioche,*pTotalPiece,2);
+            sauvegarde(tChevalets,tGrille,tJoueurs,numJoueur,tPoints,tPioche,*pTotalPiece);
         }
         liberationChar(tJoueurs,strlen(tJoueurs));
         liberationChar(tChevalets,strlen(tChevalets));
         free(tMot);
+        free(tPoints);
+        printf("À plus tard ;)");
         exit(0);
     }
     else{
@@ -404,7 +406,6 @@ char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDeb
         tJoueurs[n]=realloc(tJoueurs[n],sizeof(char)*strlen(tJoueurs[n]));
     }
     fscanf(flecture,"%d",pJDebute);
-    //fscanf(flecture,"%d",&points);
     for (int h=0;h<NB_CARAC;h++){
         fscanf(flecture,"%d",&tPioche[0][h]);
     }
@@ -428,8 +429,31 @@ char**recharge2(char**tChevalets){
     flecture=NULL;
     return tChevalets;
 }
+int*recharge3(int*tPoints){
+    int useless=0;
+    FILE* flecture = NULL;
+    flecture = fopen("sauvegarde.txt", "r");
+    if(flecture==NULL){printf("Erreur d'ouverture du fichier de sauvegarde"); exit(2);}
+    int nbJoueurs=0;
+    fscanf(flecture, "%d",&nbJoueurs);
+    fseek(flecture,(17+DIM_GRILLE*DIM_GRILLE)*sizeof(char),SEEK_CUR);
+    char tJoueurs[nbJoueurs][LONGEUR_PSEUDO];
+    for (int n=0; n<nbJoueurs;n++){
+        fscanf(flecture,"%s",tJoueurs[n]);
+    }
+    fseek(flecture,(2+NB_CARAC*2)*sizeof(char),SEEK_CUR);
+    fscanf(flecture,"%s",&useless);
+    tPoints=(int*)calloc(nbJoueurs,sizeof(int));
+    for(int l=0;l<nbJoueurs;l++){
+        fscanf(flecture,"%d",tPoints[l]);
+    }
+    fclose(flecture);
+    flecture=NULL;
+    return tPoints;
+}
 
-void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int JDebute,int points,int tPioche[NB_CARAC][NB_COLONE],int totalPiece,int nbJoueurs){
+void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int JDebute,int*tPoints,int tPioche[NB_CARAC][NB_COLONE],int totalPiece){
+    int nbJoueurs=strlen(tJoueurs);
     FILE* fecriture = NULL;
     fecriture=fopen("sauvegarde.txt","w");
     if(fecriture==NULL){printf("Erreur d'ouverture du fichier de sauvegarde"); exit(1);}
@@ -446,11 +470,14 @@ void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**
         fprintf(fecriture,"%s\n",tJoueurs[n]);
     }
     fprintf(fecriture,"%d\n",JDebute);
-    //fprintf(fecriture,"%d\n",points);
+
     for (int h=0;h<NB_CARAC;h++){
         fprintf(fecriture,"%d ",tPioche[0][h]);
     }
     fprintf(fecriture,"%d\n",totalPiece);
+    for(int l=0;l<nbJoueurs;l++){
+        fprintf(fecriture,"%d\n",tPoints[l]);
+    }
     fclose(fecriture);
     fecriture = NULL;
 }
