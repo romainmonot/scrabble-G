@@ -283,11 +283,11 @@ int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tM
     return 0;
 }
 
-void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece,int*tPoints){
-    int i=0,j=0,k=0,ligne=0,rep=1;
+void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece,int*tPoints,int nbJoueurs){
+    int i=0,j=0,k=0,l=0,ligne=0,rep=1,in=1,val=2,ecriture=0;
     char sens='R',colone='R';
     tMot=realloc(tMot,sizeof(char)*DIM_GRILLE);
-    printf("   A  B  C  D  E  F  G  H  I  J  K  L  M  N  O\n");
+    printf("\n   A  B  C  D  E  F  G  H  I  J  K  L  M  N  O\n");
     for(i=0;i<10;i++){
         printf("%d |",i);
         for(j=0;j<DIM_GRILLE;j++){
@@ -317,7 +317,7 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
             scanf("%d",&rep);
         }while(rep!=0 && rep!=1);
         if(rep==1){
-            sauvegarde(tChevalets,tGrille,tJoueurs,numJoueur,tPoints,tPioche,*pTotalPiece);
+            sauvegarde(tChevalets,tGrille,tJoueurs,numJoueur,tPoints,tPioche,*pTotalPiece,nbJoueurs,tMot);
         }
         liberationChar(tJoueurs,strlen(tJoueurs));
         liberationChar(tChevalets,strlen(tChevalets));
@@ -327,34 +327,61 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
         exit(0);
     }
     else{
-        printf("Voulez vous saisir un mot ? (1) oui, (0)non\n");
-        do{
-            scanf("%d",&rep);
-        }while(rep!=0 && rep!=1);
-        if(rep==0){
-            printf("Voulez vous changer vos lettres ? (1) oui, (0)non\n");
+        do {
+            in=1;
+            val=2;
+            ecriture=0;
+            printf("Voulez vous saisir un mot ? (1) oui, (0)non\n");
             do{
                 scanf("%d",&rep);
             }while(rep!=0 && rep!=1);
-            if(rep==1){
-                changerNPiece(tChevalets, tPioche, pTotalPiece, numJoueur);
+            if(rep==0) {
+                printf("Voulez vous changer vos lettres ? (1) oui, (0)non\n");
+                do{
+                    scanf("%d",&rep);
+                }while(rep!=0 && rep!=1);
+                if(rep==1){
+                    changerNPiece(tChevalets,tPioche,pTotalPiece,numJoueur);
+                }
+            } else {
+                ecriture=1;
+                printf("Mot à saisir : ");
+                scanf("%s", tMot);
+                printf("Entrez ses coodonées :\n Lettre de colone : ");
+                scanf(" %c", &colone);
+                tCase[1] = chiffrage(colone);
+                printf(" Numéro de ligne : ");
+                scanf("%d", &ligne);
+                tCase[0] = ligne;
+                printf(" Sens : ");
+                scanf(" %c", &sens);
+                tCase[2] = chiffrage(sens);
+                val=testValidite(tMot,tChevalets[numJoueur],tPioche,pTotalPiece);
+                in=estDansLaGrille(tGrille,tCase,tMot);
+                if(in!=1){
+                    printf("Erreur: Mot hors de la Grille\n");
+                }
+                if(val/2!=1){
+                    printf("Erreur: Vous n'avez pas les pièces nécessaires\n");
+                }
+            }
+        }while(in!=1 || val/2!=1);
+        if(ecriture==1){
+            printf("Quelqu'un souhaite contester ?\nPersonne (9)\n");
+            for(l=0;l<nbJoueurs;l++){
+                printf("%s (%d)\n",tJoueurs[l],l);
+            }
+            do{
+                scanf("%d",&rep);
+            }while(rep!=9 && rep>=nbJoueurs && rep<0);
+            if(rep!=9){
+                rep=litige(numJoueur,rep,tPoints,val,tJoueurs);
+            }
+            if(rep==9){
+                ecrireDansLaGrille(tGrille,tCase,tMot);
             }
         }
-        else{
-            printf("Mot à saisir : ");
-            scanf("%s",tMot);
-            printf("Entrez ses coodonées :\n Lettre de colone : ");
-            scanf(" %c",&colone);
-            tCase[1]=chiffrage(colone);
-            printf(" Numéro de ligne : ");
-            scanf("%d",&ligne);
-            tCase[0]=ligne;
-            printf(" Sens : ");
-            scanf(" %c",&sens);
-            tCase[2]=chiffrage(sens);
-            //Se charger de la validité
-            ecrireDansLaGrille(tGrille,tCase,tMot);
-        }
+
     }
 }
 
@@ -385,12 +412,13 @@ int finDePartie(int totalPiece,char**tChevalets,int nbJoueurs){
     return 0;
 }
 
-char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDebute,int points,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece){
+char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDebute,int points,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,int*pNbJoueurs){
     FILE* flecture = NULL;
     flecture = fopen("sauvegarde.txt", "r");
     if(flecture==NULL){printf("Erreur d'ouverture du fichier de sauvegarde"); exit(2);}
     int nbJoueurs=0;
     fscanf(flecture, "%d",&nbJoueurs);
+    *pNbJoueurs=nbJoueurs;
     fseek(flecture,17*sizeof(char),SEEK_CUR);
     for(int i=0;i<DIM_GRILLE;i++){
         for (int j=0;j<DIM_GRILLE;j++){
@@ -415,11 +443,14 @@ char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDeb
     return tJoueurs;
 }
 
-char**recharge2(char**tChevalets){
+char**recharge2(char**tChevalets,char**tJoueurs,int nbJoueurs){
     FILE* flecture = NULL;
     flecture = fopen("sauvegarde.txt", "r");
-    if(flecture==NULL){printf("Erreur d'ouverture du fichier de sauvegarde"); exit(2);}
-    int nbJoueurs=0;
+    if(flecture==NULL){
+        printf("Erreur d'ouverture du fichier de sauvegarde");
+        liberationChar(tJoueurs,nbJoueurs);
+        exit(2);
+    }
     fscanf(flecture, "%d",&nbJoueurs);
     tChevalets=allocDynamique2D(nbJoueurs,NB_PIECE_MAIN);
     for(int k=0;k<nbJoueurs;k++) {
@@ -429,15 +460,19 @@ char**recharge2(char**tChevalets){
     flecture=NULL;
     return tChevalets;
 }
-int*recharge3(int*tPoints){
+int*recharge3(int*tPoints,char**tJoueurs,char**tChevalets,int nbJoueurs){
     int useless=0;
     FILE* flecture = NULL;
     flecture = fopen("sauvegarde.txt", "r");
-    if(flecture==NULL){printf("Erreur d'ouverture du fichier de sauvegarde"); exit(2);}
-    int nbJoueurs=0;
+    if(flecture==NULL){
+        printf("Erreur d'ouverture du fichier de sauvegarde");
+        liberationChar(tJoueurs,nbJoueurs);
+        liberationChar(tChevalets,nbJoueurs);
+        exit(2);
+    }
     fscanf(flecture, "%d",&nbJoueurs);
     fseek(flecture,(17+DIM_GRILLE*DIM_GRILLE)*sizeof(char),SEEK_CUR);
-    char tJoueurs[nbJoueurs][LONGEUR_PSEUDO];
+    char tJoueur[nbJoueurs][LONGEUR_PSEUDO];
     for (int n=0; n<nbJoueurs;n++){
         fscanf(flecture,"%s",tJoueurs[n]);
     }
@@ -445,18 +480,23 @@ int*recharge3(int*tPoints){
     fscanf(flecture,"%s",&useless);
     tPoints=(int*)calloc(nbJoueurs,sizeof(int));
     for(int l=0;l<nbJoueurs;l++){
-        fscanf(flecture,"%d",tPoints[l]);
+        fscanf(flecture,"%d",&tPoints[l]);
     }
     fclose(flecture);
     flecture=NULL;
     return tPoints;
 }
 
-void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int JDebute,int*tPoints,int tPioche[NB_CARAC][NB_COLONE],int totalPiece){
-    int nbJoueurs=strlen(tJoueurs);
+void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int JDebute,int*tPoints,int tPioche[NB_CARAC][NB_COLONE],int totalPiece,int nbJoueurs,char*tMot){
     FILE* fecriture = NULL;
     fecriture=fopen("sauvegarde.txt","w");
-    if(fecriture==NULL){printf("Erreur d'ouverture du fichier de sauvegarde"); exit(1);}
+    if(fecriture==NULL){
+        printf("Erreur d'ouverture du fichier de sauvegarde");
+        liberationChar(tJoueurs,nbJoueurs);
+        liberationChar(tChevalets,nbJoueurs);
+        free(tMot);
+        free(tPoints);
+        exit(1);}
     fprintf(fecriture, "%d\n", nbJoueurs);
     for(int k=0;k<nbJoueurs;k++) {
         fprintf(fecriture, "%s\n", tChevalets[k]);
@@ -532,7 +572,7 @@ void lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k){
     }
 }
 
-int motvalide(char mot[15],char listedelettres[7]) {
+int motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece) {
     int valide = 0;
     int compteur=0;
     int*k=&compteur;
@@ -546,7 +586,7 @@ int motvalide(char mot[15],char listedelettres[7]) {
     if (*k>=strlen(mot)){
         valide = 1;
         for (int j=0; j<strlen(mot);j++){
-            listedelettres[listepositions[j]]='0';
+            listedelettres[listepositions[j]]=pioche(tPioche,pTotalPiece);
         }
     }
     return valide;
@@ -558,14 +598,28 @@ void minuscule(char mot[15]){
     }
 }
 
-int testValidite(char*tMot,char*tChevalet){
-    minuscule(tMot);
-    int me=motexiste(tMot);
-    int mv=motvalide(tMot,tChevalet);
-
-    if (me==1 && mv==1){//mot existe => option (tour)
-        printf("Le mot \'%s\' est valide\n",tMot);
-    }
-    else (printf("Le mot \'%s\' n'est pas valide\n",tMot));
+int testValidite(char*tMot,char*tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece){
+    char tMotBis[strlen(tMot)];
+    strcpy(tMotBis,tMot);
+    minuscule(tMotBis);
+    int me=motexiste(tMotBis);
+    int mv=motvalide(tMot,tChevalet,tPioche,pTotalPiece);
     return me+2*mv;
+}
+
+int litige(int numJoueur,int numAccusateur,int*tPoints,int res,char**tJoueurs){
+    if(res%2!=1){
+        printf("Le mot n'existe pas\n");
+        return 0;
+    }
+    else{
+        printf("Le mot existe, -10 points pour %s\n",tJoueurs[numAccusateur]);
+        if(tPoints[numAccusateur]>10){
+            tPoints[numAccusateur]-=10;
+        }
+        else{
+            tPoints[numAccusateur]=0;
+        }
+    }
+    return 9;
 }
