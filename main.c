@@ -57,9 +57,10 @@ int main() {
     return 0;
 }
 
-
-//mot valide tiend en compte la grille
-//Utiisation du joker
-//DEMARER DU centre & conexion
-//QUI A  Gagné?
+//Utiisation du joker => faire en sorte que une lettre lui soit attribuer => minuscule
 //Integrer le syts de points aux fonctions
+//depiocher si mot n'existe pas => scinder en deux mot valide
+//Cas de connexion sans lettre en commun
+//Verifier que les connexions n'engendre pas de mot bizarre
+
+//liste de mot & victoire non testé

@@ -30,20 +30,21 @@ void changerNPiece(char**tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPi
 void liberationChar(char** tTab, int longeur);
 int afficheMenu();
 char** allocJoueur(int nbJoueurs);
-void afficheMots(char**tab,int numJoueur);
 void initialiseGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE]);
 int estDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot);
 void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**tChevalets,int tCase[3],int tPioche[NB_CARAC][NB_COLONE],int numJoueur,char*tMot,int*pTotalPiece,int*tPoints,int nbJoueurs);
 void ecrireDansLaGrille(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],char*tMot);
-int finDePartie(int totalPiece,char**tChevalets,int nbJoueurs);
+int finDePartie(int totalPiece,char**tChevalets,int nbJoueurs,int*tPoints,int tPioche[NB_CARAC][NB_COLONE]);
 void sauvegarde( char**tChevalets,char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int JDebute,int*tPoints,int tPioche[NB_CARAC][NB_COLONE],int totalPiece,int nbJoueurs,char*tMot);
-char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDebute,int points,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,int*pNbJoueurs);
+char**recharge(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,int*pJDebute,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,int*pNbJoueurs);
 char**recharge2(char**tChevalets,char**tJoueurs,int nbJoueurs);
 int*recharge3(int*tPoints,char**tJoueurs,char**tChevalets,int nbJoueurs);
 int motexiste(char mot[27]);
-void lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k);
-int motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece);
+void lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*kbis);
+int motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3]);//,int*valide
 void minuscule(char mot[15]);
-int testValidite(char*tMot,char*tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece);
+int testValidite(char*tMot,char*tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3]);
 int litige(int numJoueur,int numAccusateur,int*tPoints,int res,char**tJoueurs);
+void victoire(int*tPoints,char**tJoueurs,int nbJoueurs);
+char**listeDeMots(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*listedespositions,char*tMot);
 #endif //SCRABLE_PROJET_BIBLIO_SCRABLE_H
