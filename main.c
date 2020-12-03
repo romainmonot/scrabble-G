@@ -34,7 +34,7 @@ int main() {
         tPoints=(int*)calloc(nbJoueurs,sizeof(int));
     }
     else{
-        tJoueurs=recharge(tGrille,tJoueurs,&JDebute,0,tPioche,pTotalPiece,pNbJoueurs);
+        tJoueurs=recharge(tGrille,tJoueurs,&JDebute,tPioche,pTotalPiece,pNbJoueurs);
         tChevalets=recharge2(tChevalets,tJoueurs,nbJoueurs);
         tPoints=recharge3(tPoints,tJoueurs,tChevalets,nbJoueurs);
     }
@@ -43,12 +43,12 @@ int main() {
     tCase[2]=chiffrage('H');
     // Partie
     printf("%s commence\n",tJoueurs[JDebute]);
-    while(fin!=1){
+    while(fin==0){
         affichageTour(tGrille,tJoueurs,tChevalets,tCase,tPioche,JDebute,tMot,pTotalPiece,tPoints,nbJoueurs);
         JDebute=(JDebute+1)%nbJoueurs;
-        fin=finDePartie(totalPiece,tChevalets,nbJoueurs);
+        fin=finDePartie(totalPiece,tChevalets,nbJoueurs,tPoints,tPioche);
     }
-    //QUI A  Gagné?
+    victoire(tPoints,tJoueurs,nbJoueurs);
     // Liberation
     liberationChar(tJoueurs,nbJoueurs);
     liberationChar(tChevalets,nbJoueurs);
