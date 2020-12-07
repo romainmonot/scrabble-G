@@ -371,9 +371,9 @@ void affichageTour(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char**tJoueurs,char**
             }
             if(rep==9){
                 ecrireDansLaGrille(tGrille,tCase,tMot);
+                tPoints[numJoueur]+=scoreMot(tMot,tGrille,tPioche,tCase);
             }
         }
-
     }
 }
 
@@ -551,7 +551,7 @@ int motexiste(char mot[27]) {
     }
     return valide;
 }
-
+/*
 void lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*kbis){
     int a=0;
     if(tCase[2]==chiffrage('H')){
@@ -594,8 +594,8 @@ void lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k,c
         }
     }
 }
+*/
 
-/*
 int*lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*kbis){
     int a=0;
     if(tCase[2]==chiffrage('H')){
@@ -638,7 +638,7 @@ int*lettredansmot(char c,char listedelettre[7],int listedespositions[7],int*k,ch
         }
     }
 }
- */
+/*
 int motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3]) {
     int valide = 0;
     int compteur=0,compteurbis=0;
@@ -667,7 +667,7 @@ int motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLON
     }
     return valide;
 }
-/*
+*/
 int*motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*valide) {
     *valide = 0;
     int compteur=0,compteurbis=0,a=0;
@@ -705,13 +705,13 @@ int*motvalide(char mot[15],char listedelettres[7],int tPioche[NB_CARAC][NB_COLON
     free(listepositions);//Pour l'instant
     return listepositionsMot;
 }
-*/
+
 void minuscule(char mot[15]){
     for (int i=0;i<strlen(mot);i++){
         mot[i]=tolower(mot[i]);
     }
 }
-
+/*
 int testValidite(char*tMot,char*tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3]){
     char tMotBis[strlen(tMot)];
     strcpy(tMotBis,tMot);
@@ -720,26 +720,31 @@ int testValidite(char*tMot,char*tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*p
     int mv=motvalide(tMot,tChevalet,tPioche,pTotalPiece,tGrille,tCase);
     return me+2*mv;
 }
-/*
+*/
 int testValidite(char*tMot,char*tChevalet,int tPioche[NB_CARAC][NB_COLONE],int*pTotalPiece,char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3]) {
-    char tMotBis[strlen(tMot)];
+    char tMotBis[DIM_GRILLE];
     strcpy(tMotBis, tMot);
     minuscule(tMotBis);
-    int me = motexiste(tMotBis), i = 0;
+    int me = motexiste(tMotBis), i = 0,compteur=1;
     int mv = 0;
-    int*listepositions=motvalide(tMot, tChevalet, tPioche, pTotalPiece, tGrille, tCase,&mv);
-    char **tListeDeMots = listeDeMots(tGrille, tCase, listepositions, tMot);
-    for (i = 0; i < strlen(tListeDeMots); i++) {
-        strcpy(tMotBis, tListeDeMots[i]);
-        minuscule(tMotBis);
-        me += motexiste(tMotBis);
+    int*listepositions=motvalide(tMot,tChevalet,tPioche,pTotalPiece,tGrille,tCase,&mv);
+    char**tListeDeMots=listeDeMots(tGrille,tCase,listepositions,tMot);
+    if(tListeDeMots!=NULL) {
+        for (i = 0; i < strlen(tListeDeMots); i++) {
+            if(tListeDeMots[i]!="") {
+                strcpy(tMotBis, tListeDeMots[i]);
+                minuscule(tMotBis);
+                me += motexiste(tMotBis);
+                compteur += 1;
+            }
+        }
+        liberationChar(tListeDeMots,strlen(tListeDeMots));
     }
-    me /= (strlen(tListeDeMots) + 1);
+    me /= compteur;
     free(listepositions);
-    liberationChar(tListeDeMots,NB_PIECE_MAIN);
     return me + 2 * mv;
 }
-*/
+
 int litige(int numJoueur,int numAccusateur,int*tPoints,int res,char**tJoueurs){
     if(res%2!=1){
         printf("Le mot n'existe pas\n");
@@ -787,55 +792,132 @@ void victoire(int*tPoints,char**tJoueurs,int nbJoueurs){
         printf("%s : %d points\n",tJoueurs[l],tPoints[l]);
     }
 }
-char**listeDeMots(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*listedespositions,char*tMot){//ListePosition => Position dans le chevalet
+char**listeDeMots(char tGrille[2][DIM_GRILLE][DIM_GRILLE],int tCase[3],int*listedespositions,char*tMot){
     char**tListeDeMots;
-    int i=0,lenListPos=0,premPosMot=0,b=0,c=0;
+    char tMotBis[DIM_GRILLE]="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+    int i=0,j=0,lenListPos=0,premPosMot=0,b=0,c=0;
     while(listedespositions[lenListPos]!=7){
         lenListPos+=1;
     }
-    tListeDeMots=allocDynamique2D(lenListPos,DIM_GRILLE);
+    tListeDeMots=(char**)malloc(0);
     for(i=0;i<lenListPos;i++){
         if(tCase[2]==chiffrage('H')){
-            premPosMot=tCase[0]-1;
-            while(tGrille[1][premPosMot][tCase[1]+listedespositions[i]]!=' '){
+            premPosMot=tCase[0];
+            while(tGrille[1][premPosMot-1][tCase[1]+listedespositions[i]]!=' ' && premPosMot!=0){
                 premPosMot-=1;
             }
-            b=premPosMot+1;
+            b=premPosMot;
             while(tGrille[1][b][tCase[1]+listedespositions[i]]!=' ' || b==tCase[0]){
                 if(b==tCase[0]){
-                    tListeDeMots[i-c][b-premPosMot-1]=tMot[listedespositions[i]];
+                    tMotBis[b-premPosMot]=tMot[listedespositions[i]];
                 }
                 else{
-                    tListeDeMots[i-c][b-premPosMot-1]=tGrille[1][b][tCase[1]+listedespositions[i]];
+                    tMotBis[b-premPosMot]=tGrille[1][b][tCase[1]+listedespositions[i]];
                 }
                 b+=1;
             }
-            if(b-premPosMot+1==1){
+            if(b-premPosMot==1){
                 c+=1;
+            }
+            else{
+                realloc(tListeDeMots,sizeof(tListeDeMots)+sizeof(char)*DIM_GRILLE);
+                tListeDeMots[i-c]=(char*)malloc(DIM_GRILLE*sizeof(char));
+                strcpy(tListeDeMots[i-c],tMotBis);
+                strcpy(tMotBis,"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+
             }
         }
         else{
-            premPosMot=tCase[1]-1;
-            while(tGrille[1][tCase[0]+listedespositions[i]][premPosMot]!=' '){
+            premPosMot=tCase[1];
+            while(tGrille[1][premPosMot-1][tCase[1]+listedespositions[i]]!=' ' && premPosMot!=0){
                 premPosMot-=1;
             }
-            b=premPosMot+1;
+            b=premPosMot;
             while(tGrille[1][tCase[0]+listedespositions[i]][b]!=' ' || b==tCase[1]){
                 if(b==tCase[1]){
-                    tListeDeMots[i-c][b-premPosMot-1]=tMot[listedespositions[i]];
+                    tMotBis[b-premPosMot]=tMot[listedespositions[i]];
                 }
                 else{
-                    tListeDeMots[i-c][b-premPosMot-1]=tGrille[1][tCase[0]+listedespositions[i]][b];
+                    tMotBis[b-premPosMot]=tGrille[1][tCase[0]+listedespositions[i]][b];
                 }
                 b+=1;
             }
-            if(b-premPosMot+1==1){
+            if(b-premPosMot==1){
                 c+=1;
+            }
+            else{
+                realloc(tListeDeMots,sizeof(tListeDeMots)+sizeof(char)*DIM_GRILLE);
+                tListeDeMots[i-c]=(char*)malloc(DIM_GRILLE*sizeof(char));
+                strcpy(tListeDeMots[i-c],tMotBis);
+                strcpy(tMotBis,"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+
             }
         }
     }
-    for (int j = 0; j < strlen(tListeDeMots); j++) {
-        printf("%s\n",tListeDeMots[j]);
+    printf("%d",sizeof(tListeDeMots));
+    if(c==lenListPos){
+        free(tListeDeMots);
+        tListeDeMots=NULL;
+    }
+    else{
+        for (int k = 0; k < strlen(tListeDeMots); k++) {
+            printf("%s\n",tListeDeMots[k]);
+        }
     }
     return tListeDeMots;
 }
+
+int scoreMot(char*mot, char tGrille[2][DIM_GRILLE][DIM_GRILLE], int tTab[NB_CARAC][NB_COLONE],int tCase[3]) {
+    int score = 0, i = 0, n = 0, lettre = 0;
+    if (tCase[2] == chiffrage('H')) {
+        for (i = 0; i < strlen(mot); i++) {
+            n = chiffrage(mot[i]);
+            if (tGrille[0][tCase[0]][tCase[1]+i] == '&') {
+                lettre = tTab[n][1] * 2;
+            }
+            else if (tGrille[1][tCase[0]][tCase[1] + i] == '%') {
+                lettre = tTab[n][1] * 3;
+            }
+            else {
+                lettre = tTab[n][1];
+            }
+            score += lettre;
+        }
+    }
+    else {
+        for (i = 0; i < strlen(mot); i++) {
+            n = chiffrage(mot[i]);
+            if (tGrille[0][tCase[0] + i][tCase[1]] == '&') {
+                lettre = tTab[n][1] * 2;
+            }
+            else if (tGrille[0][tCase[0] + i][tCase[1]] == '%') {
+                lettre = tTab[n][1] * 3;
+            }
+            else {
+                lettre = tTab[n][1];
+            }
+            score += lettre;
+        }
+    }
+    if (tCase[2] == chiffrage('H')) {
+        for (i = 0; i < strlen(mot); i++) {
+            if (tGrille[0][tCase[0]][tCase[1] + i] == '@') {
+                score *= 2;
+            }
+            else if (tGrille[1][tCase[0]][tCase[1] + i] == '$') {
+                score *= 3;
+            }
+        }
+    }
+    else {
+        for (i = 0; i < strlen(mot); i++) {
+            if (tGrille[0][tCase[0] + i][tCase[1]] == '@') {
+                score *= 2;
+            }
+
+            else if (tGrille[0][tCase[0] + i][tCase[1]] == '$') {
+                score *= 3;
+            }
+        }
+    }
+    return score;
