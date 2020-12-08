@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <fcntl.h>
 #include "biblio_scrable.h"
 
 int main() {
@@ -56,11 +55,3 @@ int main() {
     free(tPoints);
     return 0;
 }
-
-//Utiisation du joker => faire en sorte que une lettre lui soit attribuer => minuscule
-//Integrer le syts de points aux fonctions
-//depiocher si mot n'existe pas => scinder en deux mot valide
-//Cas de connexion sans lettre en commun
-//Verifier que les connexions n'engendre pas de mot bizarre
-
-//liste de mot & victoire non testé
