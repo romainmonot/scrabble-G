@@ -45,7 +45,7 @@ char**rechargeJoueurs(char tGrille[2][DIM_GRILLE][DIM_GRILLE],char** tJoueurs,in
     int nbJoueurs=0;
     fscanf(flecture, "%d",&nbJoueurs);
     *pNbJoueurs=nbJoueurs;
-    fseek(flecture,17*sizeof(char),SEEK_CUR);
+    fseek(flecture,(8*nbJoueurs+1)*sizeof(char),SEEK_CUR);
     for(int i=0;i<DIM_GRILLE;i++){
         for (int j=0;j<DIM_GRILLE;j++){
             fscanf(flecture,"%c",&tGrille[1][i][j]);
@@ -97,7 +97,7 @@ int*rechargePoints(int*tPoints,char**tJoueurs,char**tChevalets,int nbJoueurs){
         exit(2);
     }
     fscanf(flecture, "%d",&nbJoueurs);
-    fseek(flecture,(17+DIM_GRILLE*DIM_GRILLE)*sizeof(char),SEEK_CUR);
+    fseek(flecture,(1+8*nbJoueurs+DIM_GRILLE*DIM_GRILLE)*sizeof(char),SEEK_CUR);
     char tJoueur[nbJoueurs][LONGEUR_PSEUDO];
     for (int n=0; n<nbJoueurs;n++){
         fscanf(flecture,"%s",tJoueurs[n]);
