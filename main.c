@@ -1,8 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
-#include <string.h>
-#include "biblio_scrable.h"
+#include "Macros et include.h"
+#include "Sauvegarde.h"
+#include "Fin de partie .h"
+#include "Synthese.h"
+#include "Initialisation.h"
+#include "Fonctions de base .h"
 
 int main() {
     // Initialisation
@@ -20,7 +22,7 @@ int main() {
     char**tJoueurs;
     char**tChevalets;
     initialiseGrille(tGrille);
-    initialiseTab(tPioche);
+    initialisePioche(tPioche);
     if(debut==1){
         printf("Combien de joueurs y'a t-il ?\n");
         do{
@@ -33,10 +35,10 @@ int main() {
         tPoints=(int*)calloc(nbJoueurs,sizeof(int));
     }
     else{
-        tJoueurs=recharge(tGrille,tJoueurs,&JDebute,tPioche,pTotalPiece,pNbJoueurs);
-        tChevalets=recharge2(tChevalets,tJoueurs,nbJoueurs);
-        tPoints=recharge3(tPoints,tJoueurs,tChevalets,nbJoueurs);
-    }
+        tJoueurs=rechargeJoueurs(tGrille,tJoueurs,&JDebute,tPioche,pTotalPiece,pNbJoueurs);
+        tChevalets=rechargeChevalets(tChevalets,tJoueurs,nbJoueurs);
+        tPoints=rechargePoints(tPoints,tJoueurs,tChevalets,nbJoueurs);
+        }
     char*tMot=(char*)malloc(DIM_GRILLE*sizeof(char));
     int tCase[3]={7,7,0};
     tCase[2]=chiffrage('H');
